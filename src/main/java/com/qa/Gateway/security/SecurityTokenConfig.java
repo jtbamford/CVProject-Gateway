@@ -35,12 +35,22 @@ public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
 				// must be an admin if trying to access admin area (authentication is also
 				// required here)
 				.antMatchers("/tm**").hasRole("ROLE_TRAINING_MANAGER")
-				.antMatchers("/trainee/update/{id}").hasRole("ROLE_TRAINEE")
+				.antMatchers("/trainee/update/{id}").authenticated()
 				.antMatchers("/trainee/create").permitAll()
 				.antMatchers("/trainee/delete/{id}").hasRole("ROLE_TRAINING_MANAGER")
-				.antMatchers("/trainee/deleteCV/{cvID}").hasRole("ROLE_TRAINEE")
-				.antMatchers("/trainee/uploadFile").hasRole("ROLE_TRAINEE")
-				
+				.antMatchers("/trainee/deleteCV/{cvID}").authenticated()
+				.antMatchers("/trainee/uploadFile/{id}").authenticated()
+				.antMatchers("/trainee/getCVByUsername/{username}").hasAnyRole("ROLE_TRAINER","ROLE_TRAINING_MANAGER")
+				.antMatchers("/trainee/getCVByUsername/{username}").authenticated()
+				.antMatchers("/trainee/getCVByID/{id}").hasAnyRole("ROLE_TRAINER","ROLE_TRAINING_MANAGER")
+				.antMatchers("/trainee/getCVByID/{id}").authenticated()
+				.antMatchers("/trainee/getTraineeByUsername/{username}").hasAnyRole("ROLE_TRAINER","ROLE_TRAINING_MANAGER")
+				.antMatchers("/trainee/getAllTrainees").hasAnyRole("ROLE_TRAINER","ROLE_TRAINING_MANAGER")
+				.antMatchers("/trainer/create").hasRole("ROLE_TRAINING_MANAGER")
+				.antMatchers("/trainer/deleteByID/{id}").hasRole("ROLE_TRAINING_MANAGER")
+				.antMatchers("/trainer/update/{id}").authenticated()
+				.antMatchers("/trainer/getByID/{id}").hasRole("ROLE_TRAINING_MANAGER")
+				.antMatchers("/trainer/getByID/{id}").authenticated()
 				// Any other request must be authenticated
 				.anyRequest().authenticated();
 	}
